@@ -66,11 +66,11 @@ button:focus-visible { outline:3px solid #9cc0ff; outline-offset:2px; }
       <input id="prenom" required autocomplete="given-name">
 
       <label for="matricule">Matricule</label>
-      <input id="matricule" required pattern="[A-Za-z0-9/\-]{3,30}" title="Entre 3 et 30 caractères : lettres, chiffres, tirets ou barres obliques" placeholder="ex. ENSET-2025-001" autocomplete="off">
+      <input id="matricule" required pattern="[A-Za-z0-9/\-]{3,30}" title="Entre 3 et 30 caractères : lettres, chiffres, tirets ou barres obliques" placeholder="ex: 700001STI26" autocomplete="off">
       <p class="statut" id="msg-mat" aria-live="polite"></p>
 
       <label for="telephone">Numéro de téléphone</label>
-      <input id="telephone" type="tel" required pattern="[+0-9 ]{8,20}" title="Entre 8 et 20 chiffres, avec ou sans +" autocomplete="tel" placeholder="ex. +229 97 00 00 00">
+      <input id="telephone" type="tel" required pattern="[+0-9 ]{8,20}" title="Entre 8 et 20 chiffres, avec ou sans +" autocomplete="tel" placeholder="ex. 01 97 00 00 00">
 
       <p class="statut" id="statut-loc">Localisation : en attente…</p>
       <button type="button" class="secondaire" id="btn-loc">Autoriser ma localisation</button>
@@ -84,9 +84,9 @@ button:focus-visible { outline:3px solid #9cc0ff; outline-offset:2px; }
 <script>
 /* ===== CONFIGURATION ===== */
 const CONFIG = {
-  MEET_URL: "https://meet.google.com/xxx-xxxx-xxx",       // ← votre lien Google Meet
-  SUPABASE_URL: "https://xxxxxxxxxxxx.supabase.co",       // ← Settings > API > Project URL
-  SUPABASE_KEY: "votre-cle-publique-anon"                 // ← Settings > API > anon public key
+  MEET_URL: "https://meet.google.com/czf-gytk-fkn",       // ← votre lien Google Meet
+  SUPABASE_URL: "https://idvdperqrokcxogroebo.supabase.co",       // ← Settings > API > Project URL
+  SUPABASE_KEY: "sb_publishable_hpkv1RTNO6RQ69pSbU9X5g_heLvbBNM"                 // ← Settings > API > anon public key
 };
 
 const db = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY);
