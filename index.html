@@ -66,11 +66,11 @@ button:focus-visible { outline:3px solid #9cc0ff; outline-offset:2px; }
       <input id="prenom" required autocomplete="given-name">
 
       <label for="matricule">Matricule</label>
-      <input id="matricule" required pattern="[A-Za-z0-9/\-]{3,30}" title="Entre 3 et 30 caractères : lettres, chiffres, tirets ou barres obliques" placeholder="ex: 700001STI26" autocomplete="off">
+      <input id="matricule" required pattern="[A-Za-z0-9/\-]{3,30}" title="Entre 3 et 30 caractères : lettres, chiffres, tirets ou barres obliques" placeholder="ex. ENSET-2025-001" autocomplete="off">
       <p class="statut" id="msg-mat" aria-live="polite"></p>
 
       <label for="telephone">Numéro de téléphone</label>
-      <input id="telephone" type="tel" required pattern="[+0-9 ]{8,20}" title="Entre 8 et 20 chiffres, avec ou sans +" autocomplete="tel" placeholder="ex. 01 97 00 00 00">
+      <input id="telephone" type="tel" required pattern="[+0-9 ]{8,20}" title="Entre 8 et 20 chiffres, avec ou sans +" autocomplete="tel" placeholder="ex. +229 97 00 00 00">
 
       <p class="statut" id="statut-loc">Localisation : en attente…</p>
       <button type="button" class="secondaire" id="btn-loc">Autoriser ma localisation</button>
@@ -84,13 +84,14 @@ button:focus-visible { outline:3px solid #9cc0ff; outline-offset:2px; }
 <script>
 /* ===== CONFIGURATION ===== */
 const CONFIG = {
-  MEET_URL: "https://meet.google.com/jsa-xtup-zos",       // ← votre lien Google Meet
-  SUPABASE_URL: "https://idvdperqrokcxogroebo.supabase.co",       // ← Settings > API > Project URL
-  SUPABASE_KEY: "sb_publishable_hpkv1RTNO6RQ69pSbU9X5g_heLvbBNM"                 // ← Settings > API > anon public key
+  MEET_URL: "https://meet.google.com/xxx-xxxx-xxx",       // ← votre lien Google Meet
+  SUPABASE_URL: "https://xxxxxxxxxxxx.supabase.co",       // ← Settings > API > Project URL
+  SUPABASE_KEY: "votre-cle-publique-anon"                 // ← Settings > API > anon public key
 };
 
 const db = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY);
 const $ = id => document.getElementById(id);
+const BOUTON_TEXTE = "Valider et rejoindre la réunion";
 let position = null;
 
 /* ===== LOCALISATION ===== */
@@ -128,50 +129,41 @@ $("form-inscription").addEventListener("submit", async e => {
     return;
   }
 
-  const matricule = $("matricule").value.trim().toUpperCase();
   const msg = $("msg-mat");
   msg.textContent = "";
   msg.className = "statut";
   const btn = $("btn-valider");
   btn.disabled = true;
-  btn.textContent = "Vérification…";
-
-  const { data: autorise, error: errVerif } = await db.rpc("matricule_autorise", { m: matricule });
-  if (errVerif) {
-    console.error(errVerif);
-    alert("Vérification impossible. Vérifiez votre connexion et réessayez.");
-    btn.disabled = false;
-    btn.textContent = "Valider et rejoindre la réunion";
-    return;
-  }
-  if (!autorise) {
-    msg.textContent = "Ce matricule ne figure pas dans la liste de la classe. Vérifiez-le ou contactez l’administrateur.";
-    msg.className = "statut erreur";
-    $("matricule").focus();
-    btn.disabled = false;
-    btn.textContent = "Valider et rejoindre la réunion";
-    return;
-  }
-
   btn.textContent = "Enregistrement…";
 
-  const { error } = await db.from("inscriptions").insert({
-    nom: $("nom").value.trim(),
-    prenom: $("prenom").value.trim(),
-    matricule: $("matricule").value.trim().toUpperCase(),
-    telephone: $("telephone").value.trim(),
-    latitude: position ? position.latitude : null,
-    longitude: position ? position.longitude : null,
-    precision_m: position ? position.precision : null
+  // La fonction crée l'inscription, ou met à jour celle qui existe déjà pour ce matricule
+  const { data: ok, error } = await db.rpc("inscrire", {
+    p_nom: $("nom").value.trim(),
+    p_prenom: $("prenom").value.trim(),
+    p_matricule: $("matricule").value.trim().toUpperCase(),
+    p_telephone: $("telephone").value.trim(),
+    p_latitude: position ? position.latitude : null,
+    p_longitude: position ? position.longitude : null,
+    p_precision: position ? position.precision : null
   });
 
   if (error) {
     console.error(error);
     alert("Impossible d’enregistrer votre inscription. Vérifiez votre connexion et réessayez.");
     btn.disabled = false;
-    btn.textContent = "Valider et rejoindre la réunion";
+    btn.textContent = BOUTON_TEXTE;
     return;
   }
+
+  if (!ok) {
+    msg.textContent = "Ce matricule ne figure pas dans la liste de la classe. Vérifiez-le ou contactez l’administrateur.";
+    msg.className = "statut erreur";
+    $("matricule").focus();
+    btn.disabled = false;
+    btn.textContent = BOUTON_TEXTE;
+    return;
+  }
+
   window.location.href = CONFIG.MEET_URL;
 });
 
