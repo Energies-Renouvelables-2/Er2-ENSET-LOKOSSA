@@ -66,11 +66,11 @@ button:focus-visible { outline:3px solid #9cc0ff; outline-offset:2px; }
       <input id="prenom" required autocomplete="given-name">
 
       <label for="matricule">Matricule</label>
-      <input id="matricule" required pattern="[A-Za-z0-9/\-]{3,30}" title="Entre 3 et 30 caractères : lettres, chiffres, tirets ou barres obliques" placeholder="ex. ENSET-2025-001" autocomplete="off">
+      <input id="matricule" required pattern="[A-Za-z0-9/\-]{3,30}" title="Entre 3 et 30 caractères : lettres, chiffres, tirets ou barres obliques" placeholder="Ex. 7400001STI26" autocomplete="off">
       <p class="statut" id="msg-mat" aria-live="polite"></p>
 
       <label for="telephone">Numéro de téléphone</label>
-      <input id="telephone" type="tel" required pattern="[+0-9 ]{8,20}" title="Entre 8 et 20 chiffres, avec ou sans +" autocomplete="tel" placeholder="ex. +229 97 00 00 00">
+      <input id="telephone" type="tel" required pattern="[+0-9 ]{8,20}" title="Entre 8 et 20 chiffres, avec ou sans +" autocomplete="tel" placeholder="Ex. 01 97 00 00 00">
 
       <p class="statut" id="statut-loc">Localisation : en attente…</p>
       <button type="button" class="secondaire" id="btn-loc">Autoriser ma localisation</button>
